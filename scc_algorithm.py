@@ -78,7 +78,7 @@ def scc_algo_parallel(trades: pd.DataFrame):
     scc_dt = scc_df.value_counts().reset_index(name="occurrence")
     scc_dt["num_traders"] = scc_dt["scc_hash"].apply(lambda h: len(global_scc_traders_map[h]))
     relevant = scc_dt[scc_dt["occurrence"] >= 100]
-    return scc_dt, relevant
+    return scc_dt, relevant, global_scc_traders_map
 
 def scc_algo_seq_orig(trades):
     global_scc_traders_map = {}

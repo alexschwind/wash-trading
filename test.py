@@ -7,7 +7,7 @@ if os.path.exists("data_preprocessed.csv"):
     print("Data loaded.")
 else:
     print("Preprocessing...")
-    trades = preprocessing("data/IDEXTrades.csv")
+    trades = preprocessing("data/EtherDeltaTrades.csv")
     trades.to_csv("data_preprocessed.csv", index=False)
     print("Preprocessing done.")
 
