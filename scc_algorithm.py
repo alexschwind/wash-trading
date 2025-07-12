@@ -3,15 +3,7 @@ import hashlib
 from tqdm.auto import tqdm
 import pandas as pd
 from joblib import Parallel, delayed
-
-def digest2int(sorted_list) -> str:
-    # Mimics digest2int by converting hash digest to an integer string
-    joined_str = ",".join(str(int(x)) for x in sorted_list)
-    return str(int(hashlib.sha256(joined_str.encode()).hexdigest(), 16))
-
-def digest2int_orig(s) -> str:
-    # Mimics digest2int by converting hash digest to an integer string
-    return str(int(hashlib.sha256(s.encode()).hexdigest(), 16))
+import numpy as np
 
 def process_sub_trades(sub_trades):
     G = nx.MultiDiGraph()
@@ -36,7 +28,7 @@ def process_sub_trades(sub_trades):
 
         for scc in sccs:
             sorted_members = sorted(scc)
-            c_hash = digest2int(sorted_members)
+            c_hash = str(hashlib.md5(",".join(str(int(x)) for x in sorted_members).encode()).hexdigest())
             local_scc_traders_map[c_hash] = sorted_members
             result.append(c_hash)
 
@@ -78,7 +70,23 @@ def scc_algo_parallel(trades: pd.DataFrame):
     scc_dt = scc_df.value_counts().reset_index(name="occurrence")
     scc_dt["num_traders"] = scc_dt["scc_hash"].apply(lambda h: len(global_scc_traders_map[h]))
     relevant = scc_dt[scc_dt["occurrence"] >= 100]
-    return scc_dt, relevant
+    return scc_dt, relevant, global_scc_traders_map
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def scc_algo_seq_orig(trades):
     global_scc_traders_map = {}

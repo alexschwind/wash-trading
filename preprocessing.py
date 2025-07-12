@@ -137,7 +137,7 @@ def preprocessing(filename, ether_dollar_path="data/EtherDollarPrice.csv", token
     non_self_trades = trades[trades["eth_buyer"] != trades["eth_seller"]]
     trades = non_self_trades
 
-    # get trader hashes
+    # add trader hashes
     global_trader_hashes = pd.DataFrame(columns=["trader_address", "trader_id"])
     all_traders = pd.unique(trades["eth_buyer"].tolist() + trades["eth_seller"].tolist())
     all_traders = sorted(all_traders)
@@ -170,4 +170,5 @@ def preprocessing(filename, ether_dollar_path="data/EtherDollarPrice.csv", token
 
     trades = trades.sort_values("timestamp")
     trades = trades[["eth_seller","eth_buyer","date","cut","timestamp","transactionHash","token","trade_amount_eth","trade_amount_dollar","trade_amount_token","eth_buyer_id","eth_seller_id"]].copy()
-    return trades
+        
+    return trades, global_trader_hashes
